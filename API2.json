@@ -1,0 +1,28 @@
+[
+    {
+        "_id": "1",
+        "userId": "123",
+        "dateOrdered": "2024-04-20T12:00:00Z",
+        "status": "ordered"
+    },
+    {
+        "_id": "2",
+        "userId": "456",
+        "dateOrdered": "2024-04-20T12:30:00Z",
+        "status": "ready"
+    },
+    {
+        "_id": "3",
+        "userId": "789",
+        "dateOrdered": "2024-04-20T13:00:00Z",
+        "status": "fulfilled"
+    },
+
+    {
+        "_id": "35",
+        "userId": "789",
+        "dateOrdered": "2024-04-20T13:00:00Z",
+        "status": "fulfilled"
+    }
+
+]

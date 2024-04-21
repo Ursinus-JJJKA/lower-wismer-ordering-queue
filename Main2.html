@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order Queue System</title>
+<style>
+    
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    h1 {
+        text-align: center;
+    }
+
+    .order {
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+
+    .remove-btn {
+        cursor: pointer;
+        color: red;
+    }
+    .complete-btn {
+        cursor: pointer;
+        color: rgb(0, 5, 80);
+    }
+</style>
+</head>
+<body>
+<h1>Order Queue</h1>
+<div id="orderQueue"></div>
+<button onclick="fetchOrders()">Fetch Orders</button>
+<script>
+    
+    let shownOrders = [];
+
+    async function fetchOrders() {
+        const response = await fetch('API2.json');
+        const orders = await response.json();
+        orders.forEach(order => {
+            if (!shownOrders.includes(order._id)) {
+                addToQueue(order);
+                shownOrders.push(order._id);
+            }
+        });
+    }
+
+    
+    function addToQueue(order) {
+        const orderQueue = document.getElementById('orderQueue');
+        const orderDiv = document.createElement('div');
+        orderDiv.className = 'order';
+        orderDiv.innerHTML = `
+            <strong>Order ID:</strong> ${order._id}<br>
+            <strong>User ID:</strong> ${order.userId}<br>
+            <strong>Date Ordered:</strong> ${order.dateOrdered}<br>
+            <strong>Status:</strong> ${order.status}<br>
+            <button class="remove-btn" onclick="removeFromQueue('${order._id}')">Remove</button>
+            <button class="complete-btn" onclick="completeOrder('${order._id}')">Complete Order</button>`;
+
+        orderQueue.appendChild(orderDiv);
+    }
+
+    
+    async function removeFromQueue(orderId) {
+        const response = await fetch(`API2.json${orderId}`, { method: 'DELETE' });
+        if (response.ok) {
+            const orderDiv = document.querySelector(`.order`);
+            orderDiv.remove();
+        } else {
+            alert('Failed to remove order');
+        }
+    }
+
+    function completeOrder2(orderId) {
+        const orderDiv = document.getElementById(orderId);
+        if (orderDiv) {
+            orderDiv.remove();
+        } else {
+            alert('Order not found in queue');
+        }
+    }
+
+    async function completeOrder(orderId) {
+
+        const response = await fetch(`API2.json/${orderId}`, { method: 'PATCH', body: JSON.stringify({ status: 'completed' }), headers: { 'Content-Type': 'application/json' } });
+        if (response.ok) {
+            const orderDiv = document.querySelector(`.order`);
+            orderDiv.remove();
+        } else {
+            alert('Failed to complete order2');
+        }
+    }
+
+    function completeOrder2(orderId) {
+        const orderDiv = document.querySelector(`#order_${orderId}`);
+        if (orderDiv) {
+            orderDiv.style.display = 'none';
+        } else {
+            alert('Failed to complete order2');
+        }
+    }
+
+    
+    window.onload = fetchOrders;
+    setInterval(fetchOrders, 30000);
+</script>
+</body>
+</html>
